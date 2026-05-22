@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from pathlib import Path
+import sys
 import unittest
 
 from bs4 import BeautifulSoup
 
-from minecraft_wiki_scraper.crafting import parse_crafting_page_html, parse_recipe_cell
+WEB_SCRAPER_ROOT = Path(__file__).resolve().parents[1]
+if str(WEB_SCRAPER_ROOT) not in sys.path:
+    sys.path.insert(0, str(WEB_SCRAPER_ROOT))
+
+from scraper import parse_crafting_page_html, parse_recipe_cell
 
 
 class CraftingParserTests(unittest.TestCase):

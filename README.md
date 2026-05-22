@@ -1,82 +1,43 @@
-Data Science RAG
+# Data Science RAG
 
-## Minecraft Wiki Crafting Scraper
+Dieses Repository ist als Sammelpunkt fuer mehrere Bausteine des Projekts gedacht. Damit scraper-spezifischer Code nicht den Rest der Struktur dominiert, liegt der Web-Scraper jetzt in einem eigenen Verzeichnis.
 
-Der Scraper liegt in `scripts/scrape_minecraft_wiki_crafting.py` und extrahiert die Rezepttabellen von `minecraft.wiki`.
+## Projektstruktur
 
-Standardverhalten:
-
-- entdeckt automatisch die aktuellen `Crafting/...`-Unterseiten über die Übersichtsseite `https://minecraft.wiki/w/Crafting`
-- extrahiert `name`, `ingredients_text`, `ingredient_links`, `station`, `shapeless`, `grid`, `output_items`, `output_count` und `description`
-- speichert standardmäßig nach `data/minecraft_crafting_recipes.json`
-
-### Installation
-
-```bash
-python3 -m pip install -r requirements.txt
+```text
+.
+|-- .github/
+|-- README.md
+`-- web_scraper/
+    |-- README.md
+    |-- requirements.txt
+    |-- scraper.py
+    `-- tests/
 ```
 
-### Nutzung
+## Bereiche im Repository
 
-Alle aktuellen Crafting-Seiten scrapen:
+### Web Scraper
 
-```bash
-python3 scripts/scrape_minecraft_wiki_crafting.py
-```
+Der Minecraft-Wiki-Scraper liegt gesammelt unter `web_scraper/`.
 
-Nur einzelne Unterseiten scrapen:
+- Scraper: `web_scraper/scraper.py`
+- Tests: `web_scraper/tests/`
+- Abhaengigkeiten: `web_scraper/requirements.txt`
+- Detaillierte Nutzung: siehe `web_scraper/README.md`
 
-```bash
-python3 scripts/scrape_minecraft_wiki_crafting.py \
-  --page Crafting/Building_blocks \
-  --page Crafting/Tools \
-  --output data/selected_crafting_recipes.json
-```
+Der Web-Scraper ist bewusst einfach gehalten: eine Python-Datei fuer die Logik und Ausfuehrung, dazu ein Testordner.
 
-Auch einzelne Artikelseiten funktionieren, zum Beispiel:
+## CI
 
-```bash
-python3 scripts/scrape_minecraft_wiki_crafting.py --page Diamond_Sword
-```
+Die Tests laufen jetzt auch automatisch in GitHub Actions bei `push` und `pull_request` ueber `.github/workflows/tests.yml`.
 
-Legacy-Rezepte einschließen:
+### Weitere Projektteile
+
+Das Root-Verzeichnis bleibt bewusst schlank, damit hier spaeter weitere Komponenten des RAG-Projekts ergaenzt werden koennen, ohne dass scraper-spezifische Dateien alles vermischen.
+
+## Installation
 
 ```bash
-python3 scripts/scrape_minecraft_wiki_crafting.py --include-legacy
-```
-
-Als JSONL speichern:
-
-```bash
-python3 scripts/scrape_minecraft_wiki_crafting.py --format jsonl
-```
-
-### Tests
-
-```bash
-python3 -m unittest discover -s tests
-```
-
-### Datenformat
-
-Beispiel eines Eintrags:
-
-```json
-{
-  "name": "Bricks",
-  "source_page": "Crafting/Building_blocks",
-  "source_url": "https://minecraft.wiki/w/Crafting/Building_blocks",
-  "ingredients_text": "Brick",
-  "ingredient_links": ["Brick"],
-  "station": "Crafting Table",
-  "shapeless": false,
-  "grid": [
-    [null, null, null],
-    [["Brick"], ["Brick"], null],
-    [["Brick"], ["Brick"], null]
-  ],
-  "output_items": ["Bricks"],
-  "output_count": 4,
-  "description": null
-}
+python3 -m pip install -r web_scraper/requirements.txt
 ```
