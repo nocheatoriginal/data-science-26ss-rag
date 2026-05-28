@@ -3,8 +3,8 @@ import json
 import re
 from pathlib import Path
 
-INPUT_FILE = "data/minecraft_crafting_recipes.json"
-OUTPUT_DIR = Path("data/minecraft_recipe_docs")
+INPUT_FILE = "web_scraper/data/minecraft_crafting_recipes.json"
+OUTPUT_DIR = Path("web_scraper/data/minecraft_recipe_docs")
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
