@@ -97,7 +97,7 @@
           "memory": "",
           "returnSourceDocuments": "",
           "rephrasePrompt": "Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.\n\nChat History:\n{chat_history}\nFollow Up Input: {question}\nStandalone Question:",
-          "responsePrompt": "I want you to act as a document that I am having a conversation with. Your name is \"AI Assistant\". Using the provided context, answer the user's question to the best of your ability using the resources provided.\nIf there is nothing in the context relevant to the question at hand, just say \"Hmm, I'm not sure\" and stop after that. Refuse to answer any question not about the info. Never break character.\n------------\n{context}\n------------\nREMEMBER: If there is no relevant information within the context, just say \"Hmm, I'm not sure\". Don't try to make up an answer. Never break character.",
+          "responsePrompt": "You are a Minecraft crafting assistant.\n\nTry to answer questions related to Minecraft to the best of you abilities.\n\nIf asked for a recipe and the recipe is found in the given context, format the response as markdown tables in this structure:\n\n# <Recipe Name>\n\n| Property | Value |\n|---|---|\n| Output | <output> |\n| Station | <station> |\n| Ingredients | <ingredients> |\n\n## Crafting Grid\n\n| Slot 1 | Slot 2 | Slot 3 |\n|---|---|---|\n| <item> | <item> | <item> |\n| <item> | <item> | <item> |\n| <item> | <item> | <item> |\n\nEnsure that the Crafting Grid table has the correct size for the crafting station used in the recipe.\n\nRules:\n- Never explain reasoning.\n- Never hallucinate recipes.\n- If recipe is not found, try to find something close to what the user could mean (a synonym or close word).\n- if you can not find anything that is related answer:\n  \"Recipe not found in database.\"",
           "inputModeration": ""
         },
         "outputAnchors": [
@@ -124,8 +124,8 @@
     {
       "id": "chatOllama_0",
       "position": {
-        "x": 838.2541780036021,
-        "y": -184.11871974731685
+        "x": 662.9904534948813,
+        "y": -277.3646160394005
       },
       "type": "customNode",
       "data": {
@@ -380,7 +380,7 @@
         "inputs": {
           "cache": "",
           "baseUrl": "http://host.docker.internal:11434",
-          "modelName": "llama3.2",
+          "modelName": "llama3.1:8b",
           "temperature": "0.3",
           "streaming": true,
           "allowImageUploads": "",
@@ -416,16 +416,16 @@
       "height": 875,
       "selected": false,
       "positionAbsolute": {
-        "x": 838.2541780036021,
-        "y": -184.11871974731685
+        "x": 662.9904534948813,
+        "y": -277.3646160394005
       },
       "dragging": false
     },
     {
       "id": "memoryVectorStore_0",
       "position": {
-        "x": 820.0829102961002,
-        "y": 892.3391335095198
+        "x": 660.8590991616325,
+        "y": 836.9569383323135
       },
       "type": "customNode",
       "data": {
@@ -473,10 +473,10 @@
         ],
         "inputs": {
           "document": [
-            "{{folderFiles_0.data.instance}}"
+            "{{fileLoader_0.data.instance}}"
           ],
           "embeddings": "{{ollamaEmbedding_0.data.instance}}",
-          "topK": ""
+          "topK": "8"
         },
         "outputAnchors": [
           {
@@ -512,16 +512,16 @@
       "height": 413,
       "selected": false,
       "positionAbsolute": {
-        "x": 820.0829102961002,
-        "y": 892.3391335095198
+        "x": 660.8590991616325,
+        "y": 836.9569383323135
       },
       "dragging": false
     },
     {
       "id": "ollamaEmbedding_0",
       "position": {
-        "x": 203.58654810595235,
-        "y": 923.0306276902909
+        "x": 95.59126751040034,
+        "y": 864.8793227542244
       },
       "type": "customNode",
       "data": {
@@ -611,163 +611,15 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 203.58654810595235,
-        "y": 923.0306276902909
+        "x": 95.59126751040034,
+        "y": 864.8793227542244
       }
-    },
-    {
-      "id": "folderFiles_0",
-      "position": {
-        "x": 158.81860530017912,
-        "y": 262.36432022327443
-      },
-      "type": "customNode",
-      "data": {
-        "id": "folderFiles_0",
-        "label": "Folder with Files",
-        "version": 4,
-        "name": "folderFiles",
-        "type": "Document",
-        "baseClasses": [
-          "Document"
-        ],
-        "category": "Document Loaders",
-        "description": "Load data from folder with multiple files",
-        "inputParams": [
-          {
-            "label": "Folder Path",
-            "name": "folderPath",
-            "type": "string",
-            "placeholder": "",
-            "id": "folderFiles_0-input-folderPath-string",
-            "display": true
-          },
-          {
-            "label": "Recursive",
-            "name": "recursive",
-            "type": "boolean",
-            "additionalParams": false,
-            "id": "folderFiles_0-input-recursive-boolean",
-            "display": true
-          },
-          {
-            "label": "Pdf Usage",
-            "name": "pdfUsage",
-            "type": "options",
-            "description": "Only when loading PDF files",
-            "options": [
-              {
-                "label": "One document per page",
-                "name": "perPage"
-              },
-              {
-                "label": "One document per file",
-                "name": "perFile"
-              }
-            ],
-            "default": "perPage",
-            "optional": true,
-            "additionalParams": true,
-            "id": "folderFiles_0-input-pdfUsage-options",
-            "display": true
-          },
-          {
-            "label": "JSONL Pointer Extraction",
-            "name": "pointerName",
-            "type": "string",
-            "description": "Only when loading JSONL files",
-            "placeholder": "<pointerName>",
-            "optional": true,
-            "additionalParams": true,
-            "id": "folderFiles_0-input-pointerName-string",
-            "display": true
-          },
-          {
-            "label": "Additional Metadata",
-            "name": "metadata",
-            "type": "json",
-            "description": "Additional metadata to be added to the extracted documents",
-            "optional": true,
-            "additionalParams": true,
-            "id": "folderFiles_0-input-metadata-json",
-            "display": true
-          },
-          {
-            "label": "Omit Metadata Keys",
-            "name": "omitMetadataKeys",
-            "type": "string",
-            "rows": 4,
-            "description": "Each document loader comes with a default set of metadata keys that are extracted from the document. You can use this field to omit some of the default metadata keys. The value should be a list of keys, seperated by comma. Use * to omit all metadata keys execept the ones you specify in the Additional Metadata field",
-            "placeholder": "key1, key2, key3.nestedKey1",
-            "optional": true,
-            "additionalParams": true,
-            "id": "folderFiles_0-input-omitMetadataKeys-string",
-            "display": true
-          }
-        ],
-        "inputAnchors": [
-          {
-            "label": "Text Splitter",
-            "name": "textSplitter",
-            "type": "TextSplitter",
-            "optional": true,
-            "id": "folderFiles_0-input-textSplitter-TextSplitter",
-            "display": true
-          }
-        ],
-        "inputs": {
-          "folderPath": "/uploads/minecraft_recipe_docs",
-          "recursive": "",
-          "textSplitter": "{{markdownTextSplitter_0.data.instance}}",
-          "pdfUsage": "perPage",
-          "pointerName": "",
-          "metadata": "",
-          "omitMetadataKeys": ""
-        },
-        "outputAnchors": [
-          {
-            "name": "output",
-            "label": "Output",
-            "type": "options",
-            "description": "Array of document objects containing metadata and pageContent",
-            "options": [
-              {
-                "id": "folderFiles_0-output-document-Document|json",
-                "name": "document",
-                "label": "Document",
-                "description": "Array of document objects containing metadata and pageContent",
-                "type": "Document | json"
-              },
-              {
-                "id": "folderFiles_0-output-text-string|json",
-                "name": "text",
-                "label": "Text",
-                "description": "Concatenated string from pageContent of documents",
-                "type": "string | json"
-              }
-            ],
-            "default": "document"
-          }
-        ],
-        "outputs": {
-          "output": "document"
-        },
-        "selected": false
-      },
-      "width": 300,
-      "height": 511,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 158.81860530017912,
-        "y": 262.36432022327443
-      },
-      "dragging": false
     },
     {
       "id": "markdownTextSplitter_0",
       "position": {
-        "x": -371.6136867318606,
-        "y": 246.0850682939024
+        "x": -488.2535330694968,
+        "y": 107.01541080922374
       },
       "type": "customNode",
       "data": {
@@ -849,9 +701,9 @@
         ],
         "inputAnchors": [],
         "inputs": {
-          "chunkSize": "2000",
+          "chunkSize": 1000,
           "chunkOverlap": "0",
-          "splitByHeaders": "h1"
+          "splitByHeaders": "h2"
         },
         "outputAnchors": [
           {
@@ -869,9 +721,158 @@
       "height": 479,
       "selected": false,
       "positionAbsolute": {
-        "x": -371.6136867318606,
-        "y": 246.0850682939024
+        "x": -488.2535330694968,
+        "y": 107.01541080922374
       },
+      "dragging": false
+    },
+    {
+      "id": "fileLoader_0",
+      "position": {
+        "x": 4.648004007637866,
+        "y": 145.78294743326796
+      },
+      "type": "customNode",
+      "data": {
+        "id": "fileLoader_0",
+        "label": "File Loader",
+        "version": 2,
+        "name": "fileLoader",
+        "type": "Document",
+        "baseClasses": [
+          "Document"
+        ],
+        "category": "Document Loaders",
+        "description": "A generic file loader that can load different file types",
+        "inputParams": [
+          {
+            "label": "File",
+            "name": "file",
+            "type": "file",
+            "fileType": "*",
+            "id": "fileLoader_0-input-file-file",
+            "display": true
+          },
+          {
+            "label": "Pdf Usage",
+            "name": "usage",
+            "type": "options",
+            "description": "Only when loading PDF files",
+            "options": [
+              {
+                "label": "One document per page",
+                "name": "perPage"
+              },
+              {
+                "label": "One document per file",
+                "name": "perFile"
+              }
+            ],
+            "default": "perPage",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-usage-options",
+            "display": true
+          },
+          {
+            "label": "Use Legacy Build",
+            "name": "legacyBuild",
+            "type": "boolean",
+            "description": "Use legacy build for PDF compatibility issues",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-legacyBuild-boolean",
+            "display": true
+          },
+          {
+            "label": "JSONL Pointer Extraction",
+            "name": "pointerName",
+            "type": "string",
+            "description": "Only when loading JSONL files",
+            "placeholder": "<pointerName>",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-pointerName-string",
+            "display": true
+          },
+          {
+            "label": "Additional Metadata",
+            "name": "metadata",
+            "type": "json",
+            "description": "Additional metadata to be added to the extracted documents",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-metadata-json",
+            "display": true
+          },
+          {
+            "label": "Omit Metadata Keys",
+            "name": "omitMetadataKeys",
+            "type": "string",
+            "rows": 4,
+            "description": "Each document loader comes with a default set of metadata keys that are extracted from the document. You can use this field to omit some of the default metadata keys. The value should be a list of keys, seperated by comma. Use * to omit all metadata keys execept the ones you specify in the Additional Metadata field",
+            "placeholder": "key1, key2, key3.nestedKey1",
+            "optional": true,
+            "additionalParams": true,
+            "id": "fileLoader_0-input-omitMetadataKeys-string",
+            "display": true
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Text Splitter",
+            "name": "textSplitter",
+            "type": "TextSplitter",
+            "optional": true,
+            "id": "fileLoader_0-input-textSplitter-TextSplitter",
+            "display": true
+          }
+        ],
+        "inputs": {
+          "textSplitter": "{{markdownTextSplitter_0.data.instance}}",
+          "usage": "perPage",
+          "legacyBuild": "",
+          "pointerName": "",
+          "metadata": "",
+          "omitMetadataKeys": ""
+        },
+        "outputAnchors": [
+          {
+            "name": "output",
+            "label": "Output",
+            "type": "options",
+            "description": "Array of document objects containing metadata and pageContent",
+            "options": [
+              {
+                "id": "fileLoader_0-output-document-Document|json",
+                "name": "document",
+                "label": "Document",
+                "description": "Array of document objects containing metadata and pageContent",
+                "type": "Document | json"
+              },
+              {
+                "id": "fileLoader_0-output-text-string|json",
+                "name": "text",
+                "label": "Text",
+                "description": "Concatenated string from pageContent of documents",
+                "type": "string | json"
+              }
+            ],
+            "default": "document"
+          }
+        ],
+        "outputs": {
+          "output": "document"
+        },
+        "selected": false
+      },
+      "width": 300,
+      "height": 446,
+      "positionAbsolute": {
+        "x": 4.648004007637866,
+        "y": 145.78294743326796
+      },
+      "selected": false,
       "dragging": false
     }
   ],
@@ -901,20 +902,20 @@
       "id": "ollamaEmbedding_0-ollamaEmbedding_0-output-ollamaEmbedding-OllamaEmbeddings|Embeddings-memoryVectorStore_0-memoryVectorStore_0-input-embeddings-Embeddings"
     },
     {
-      "source": "folderFiles_0",
-      "sourceHandle": "folderFiles_0-output-document-Document|json",
+      "source": "fileLoader_0",
+      "sourceHandle": "fileLoader_0-output-document-Document|json",
       "target": "memoryVectorStore_0",
       "targetHandle": "memoryVectorStore_0-input-document-Document",
       "type": "buttonedge",
-      "id": "folderFiles_0-folderFiles_0-output-document-Document|json-memoryVectorStore_0-memoryVectorStore_0-input-document-Document"
+      "id": "fileLoader_0-fileLoader_0-output-document-Document|json-memoryVectorStore_0-memoryVectorStore_0-input-document-Document"
     },
     {
       "source": "markdownTextSplitter_0",
       "sourceHandle": "markdownTextSplitter_0-output-markdownTextSplitter-MarkdownTextSplitter|RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable",
-      "target": "folderFiles_0",
-      "targetHandle": "folderFiles_0-input-textSplitter-TextSplitter",
+      "target": "fileLoader_0",
+      "targetHandle": "fileLoader_0-input-textSplitter-TextSplitter",
       "type": "buttonedge",
-      "id": "markdownTextSplitter_0-markdownTextSplitter_0-output-markdownTextSplitter-MarkdownTextSplitter|RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable-folderFiles_0-folderFiles_0-input-textSplitter-TextSplitter"
+      "id": "markdownTextSplitter_0-markdownTextSplitter_0-output-markdownTextSplitter-MarkdownTextSplitter|RecursiveCharacterTextSplitter|TextSplitter|BaseDocumentTransformer|Runnable-fileLoader_0-fileLoader_0-input-textSplitter-TextSplitter"
     }
   ]
 }
