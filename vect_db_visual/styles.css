@@ -390,6 +390,18 @@ canvas {
   font-weight: 600;
 }
 
+.mini-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mini-demo-header h3 {
+  margin: 0;
+}
+
 .math-card p {
   margin: 0 0 14px;
   color: var(--muted);
@@ -430,6 +442,22 @@ canvas {
   font-family: var(--font-mono);
 }
 
+.vector-value {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.vector-value.match {
+  background: #dafbe1;
+  color: #116329;
+}
+
+.vector-value.miss {
+  background: #ffebe9;
+  color: #82071e;
+}
+
 .similarity-meter {
   position: relative;
   height: 12px;
@@ -443,7 +471,7 @@ canvas {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #2da44e;
+  background: linear-gradient(90deg, #0969da, #2da44e);
   animation: fill-meter 1.4s ease-out both;
 }
 
@@ -508,6 +536,12 @@ canvas {
 
 .icon-button:hover {
   background: #eef2f6;
+}
+
+.mini-refresh {
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
 }
 
 .walkthrough-body {

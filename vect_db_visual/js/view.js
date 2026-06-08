@@ -11,6 +11,11 @@ export class VectorDbView {
     this.resultsList = document.querySelector("#resultsList");
     this.prevStep = document.querySelector("#prevStep");
     this.nextStep = document.querySelector("#nextStep");
+    this.randomMiniExample = document.querySelector("#randomMiniExample");
+    this.miniQueryVector = document.querySelector("#miniQueryVector");
+    this.miniDocumentVector = document.querySelector("#miniDocumentVector");
+    this.miniSimilarityBar = document.querySelector("#miniSimilarityBar");
+    this.miniSimilarityLabel = document.querySelector("#miniSimilarityLabel");
     this.stepCounter = document.querySelector("#stepCounter");
     this.stepLabel = document.querySelector("#stepLabel");
     this.stepTitle = document.querySelector("#stepTitle");
@@ -44,6 +49,11 @@ export class VectorDbView {
       this.renderWalkthroughStep();
     });
 
+    this.randomMiniExample.addEventListener("click", () => {
+      this.viewModel.randomizeMiniExample();
+      this.renderMiniExample(true);
+    });
+
     window.addEventListener("resize", () => this.drawAfterLayout());
 
     if ("ResizeObserver" in window) {
@@ -65,6 +75,7 @@ export class VectorDbView {
     this.animationStart = performance.now();
     this.topKValue.textContent = this.viewModel.topK;
     this.renderResults();
+    this.renderMiniExample();
     this.renderWalkthroughStep();
     this.draw();
   }
@@ -92,6 +103,33 @@ export class VectorDbView {
     this.stepTitle.textContent = step.title;
     this.stepText.textContent = step.text;
     this.stepFormula.textContent = step.formula;
+  }
+
+  renderMiniExample(animate = false) {
+    const example = this.viewModel.miniExampleView;
+    this.miniQueryVector.innerHTML = this.renderVectorValues(example.values, "query");
+    this.miniDocumentVector.innerHTML = this.renderVectorValues(example.values, "document");
+    this.miniSimilarityLabel.textContent = `Similarity: ${example.score.toFixed(2)}`;
+    this.miniSimilarityBar.style.width = `${example.percent}%`;
+    this.miniSimilarityBar.parentElement.setAttribute("aria-label", `Ähnlichkeit ${example.percent} Prozent`);
+
+    if (animate) {
+      this.restartMiniBarAnimation();
+    }
+  }
+
+  restartMiniBarAnimation() {
+    this.miniSimilarityBar.style.animation = "none";
+    void this.miniSimilarityBar.offsetHeight;
+    this.miniSimilarityBar.style.animation = "";
+  }
+
+  renderVectorValues(values, key) {
+    const renderedValues = values
+      .map((value) => `<span class="vector-value ${value.status}">${value[key]}</span>`)
+      .join("<span>, </span>");
+
+    return `<span>[</span>${renderedValues}<span>]</span>`;
   }
 
   fitCanvas() {

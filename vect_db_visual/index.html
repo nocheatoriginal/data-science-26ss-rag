@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VectorDB</title>
+    <title>data-science-26ss-rag</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -15,13 +15,13 @@
               <path d="M3 2.75A1.75 1.75 0 1 1 4.75 4.5 1.75 1.75 0 0 1 3 2.75Zm7.25 1.5A1.75 1.75 0 1 1 12 6a1.75 1.75 0 0 1-1.75-1.75ZM2.25 10.5A1.75 1.75 0 1 1 4 12.25 1.75 1.75 0 0 1 2.25 10.5Zm8.5 2.25A1.75 1.75 0 1 1 12.5 14.5a1.75 1.75 0 0 1-1.75-1.75ZM5.8 3.27l4.12 1.06-.25.97-4.12-1.06.25-.97Zm-.92 6.09 5.53-4.17.6.8-5.53 4.17-.6-.8Zm.35 1.46 5.99 1.58-.26.96-5.99-1.58.26-.96Z" />
             </svg>
           </span>
-          VectorDB
+          data-science-26ss-rag
         </a>
         <div class="nav-links" aria-label="Sektionen">
-          <a href="#workflow">Ablauf</a>
-          <a href="#playground">Demo</a>
-          <a href="#math">Berechnung</a>
-          <a href="#concepts">RAG</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#playground">Interaktive Demo</a>
+          <a href="#math">Mathematische Grundlage</a>
+          <a href="#concepts">RAG Kontext</a>
         </div>
       </nav>
     </header>
@@ -29,7 +29,6 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">RAG Grundlagen</p>
           <h1>So findet eine Vector Datenbank semantisch passende Inhalte.</h1>
           <p>
             Texte werden in Zahlenvektoren umgewandelt, im mehrdimensionalen Raum abgelegt
@@ -55,7 +54,7 @@ topK = db.search(query, k=3)
 
       <section class="section" id="workflow">
         <div class="section-heading">
-          <p class="eyebrow">Pipeline</p>
+          <p class="eyebrow">Workflow</p>
           <h2>Vom Dokument zur Antwort</h2>
         </div>
         <div class="steps">
@@ -130,19 +129,22 @@ topK = db.search(query, k=3)
             </p>
           </article>
           <article class="math-card vector-demo">
-            <h3>Mini-Beispiel</h3>
+            <div class="mini-demo-header">
+              <h3>Beispiel</h3>
+              <button class="icon-button mini-refresh" id="randomMiniExample" type="button" aria-label="Neue Werte erzeugen">↻</button>
+            </div>
             <div class="vector-row">
               <span>Query</span>
-              <code>[0.82, 0.44, 0.36]</code>
+              <code id="miniQueryVector">[0.82, 0.44, 0.36]</code>
             </div>
             <div class="vector-row">
               <span>Dokument</span>
-              <code>[0.76, 0.51, 0.29]</code>
+              <code id="miniDocumentVector">[0.76, 0.51, 0.29]</code>
             </div>
             <div class="similarity-meter" aria-label="Ähnlichkeit 96 Prozent">
-              <span style="width: 96%"></span>
+              <span id="miniSimilarityBar" style="width: 96%"></span>
             </div>
-            <strong class="meter-label">Similarity: 0.96</strong>
+            <strong class="meter-label" id="miniSimilarityLabel">Similarity: 0.96</strong>
           </article>
           <article class="math-card">
             <h3>Warum Dimensionen?</h3>
