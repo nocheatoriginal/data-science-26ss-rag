@@ -55,7 +55,8 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  max-width: var(--container);
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
   padding: 12px var(--page-gutter);
 }
@@ -377,10 +378,6 @@ canvas {
   font-weight: 600;
 }
 
-.math-section {
-  border-bottom: 1px solid var(--border);
-}
-
 .math-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr 0.9fr;
@@ -549,6 +546,10 @@ canvas {
 
 .concept-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.concepts-section {
+  background: var(--canvas);
 }
 
 .concept-grid h2 {
