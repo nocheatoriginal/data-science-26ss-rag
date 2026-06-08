@@ -9,7 +9,8 @@
   --accent-dark: #0550ae;
   --success: #1a7f37;
   --danger: #cf222e;
-  --shadow: 0 8px 24px rgba(140, 149, 159, 0.18);
+  --shadow: none;
+  --playground-height: 440px;
 }
 
 * {
@@ -169,7 +170,6 @@ a {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #ffffff;
-  box-shadow: var(--shadow);
 }
 
 .hero-visual {
@@ -271,7 +271,8 @@ pre {
 
 .playground {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 320px;
+  grid-template-columns: 280px minmax(0, 1fr) 340px;
+  align-items: stretch;
   gap: 16px;
 }
 
@@ -279,6 +280,7 @@ pre {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: var(--playground-height);
 }
 
 .control-hint {
@@ -308,7 +310,7 @@ select {
 }
 
 .vector-space {
-  min-height: 360px;
+  min-height: var(--playground-height);
   padding: 0;
   overflow: hidden;
 }
@@ -317,19 +319,28 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 360px;
+  min-height: var(--playground-height);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--playground-height);
+  max-height: var(--playground-height);
 }
 
 .results-list {
   display: grid;
   gap: 10px;
+  overflow-y: auto;
+  padding-right: 2px;
 }
 
 .result {
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--canvas);
+  background: #ffffff;
 }
 
 .result-head {
@@ -359,7 +370,6 @@ canvas {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: #ffffff;
-  box-shadow: var(--shadow);
 }
 
 .math-card h3 {
@@ -489,6 +499,22 @@ canvas {
   .hero {
     min-height: auto;
     padding-top: 52px;
+  }
+
+  .controls,
+  .vector-space,
+  canvas,
+  .results {
+    min-height: auto;
+  }
+
+  .vector-space,
+  canvas {
+    min-height: 380px;
+  }
+
+  .results {
+    max-height: none;
   }
 
   .steps,
