@@ -35,10 +35,6 @@
             Texte werden in Zahlenvektoren umgewandelt, im mehrdimensionalen Raum abgelegt
             und per Ähnlichkeitssuche wiedergefunden.
           </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#playground">Demo starten</a>
-            <a class="button secondary" href="#workflow">Ablauf ansehen</a>
-          </div>
         </div>
         <div class="hero-visual" aria-label="Vektorraum Vorschau">
           <div class="terminal-bar">
@@ -101,7 +97,6 @@ topK = db.search(query, k=3)
             </select>
             <label for="topK">Top-K Treffer: <strong id="topKValue">3</strong></label>
             <input id="topK" type="range" min="1" max="5" value="3" />
-            <button class="button primary full" id="searchButton">Ähnlichkeit berechnen</button>
             <p class="control-hint">Der rote Query-Vektor scannt den Raum. Blaue Linien markieren die nächsten Treffer.</p>
           </div>
           <div class="panel vector-space">
@@ -162,6 +157,27 @@ topK = db.search(query, k=3)
             </p>
           </article>
         </div>
+        <article class="math-card walkthrough" aria-live="polite">
+          <div class="walkthrough-header">
+            <div>
+              <p class="eyebrow">Beispielrechnung</p>
+              <h3>Cosine Similarity Schritt für Schritt</h3>
+            </div>
+            <div class="walkthrough-actions">
+              <button class="icon-button" id="prevStep" type="button" aria-label="Vorheriger Schritt">‹</button>
+              <span id="stepCounter">1 / 4</span>
+              <button class="icon-button" id="nextStep" type="button" aria-label="Nächster Schritt">›</button>
+            </div>
+          </div>
+          <div class="walkthrough-body">
+            <div class="walkthrough-step">
+              <span id="stepLabel">Schritt 1</span>
+              <h4 id="stepTitle">Vektoren festlegen</h4>
+              <p id="stepText">Wir vergleichen eine Query mit einem Dokument über drei vereinfachte Embedding-Dimensionen.</p>
+            </div>
+            <div class="walkthrough-formula" id="stepFormula">A = [2, 1, 2] · B = [3, 1, 1]</div>
+          </div>
+        </article>
       </section>
 
       <section class="section" id="concepts">

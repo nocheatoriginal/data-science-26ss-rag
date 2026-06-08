@@ -3,10 +3,21 @@ const ctx = canvas.getContext("2d");
 const querySelect = document.querySelector("#querySelect");
 const topK = document.querySelector("#topK");
 const topKValue = document.querySelector("#topKValue");
-const searchButton = document.querySelector("#searchButton");
 const resultsList = document.querySelector("#resultsList");
+const prevStep = document.querySelector("#prevStep");
+const nextStep = document.querySelector("#nextStep");
+const stepCounter = document.querySelector("#stepCounter");
+const stepLabel = document.querySelector("#stepLabel");
+const stepTitle = document.querySelector("#stepTitle");
+const stepText = document.querySelector("#stepText");
+const stepFormula = document.querySelector("#stepFormula");
+const sansFont = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif';
 let animationStart = performance.now();
 let animationFrameId = 0;
+let lastCanvasWidth = 0;
+let lastCanvasHeight = 0;
+let lastCanvasRatio = 0;
+let currentStep = 0;
 
 const documents = [
   { title: "Embeddings", text: "Texte werden als Zahlenvektoren repräsentiert.", x: 0.68, y: 0.3, topics: ["rag", "database"] },
@@ -23,6 +34,29 @@ const queries = {
   database: { label: "DB Frage", x: 0.35, y: 0.39 },
   privacy: { label: "Security Frage", x: 0.69, y: 0.64 },
 };
+
+const walkthroughSteps = [
+  {
+    title: "Vektoren festlegen",
+    text: "Wir vergleichen eine Query mit einem Dokument über drei vereinfachte Embedding-Dimensionen.",
+    formula: "A = [2, 1, 2]\nB = [3, 1, 1]",
+  },
+  {
+    title: "Skalarprodukt berechnen",
+    text: "Gleiche Positionen werden multipliziert und anschließend addiert.",
+    formula: "A · B = (2 × 3) + (1 × 1) + (2 × 1)\nA · B = 6 + 1 + 2 = 9",
+  },
+  {
+    title: "Vektorlängen bestimmen",
+    text: "Jeder Vektor wird über seine Länge normalisiert, damit längere Texte nicht automatisch gewinnen.",
+    formula: "||A|| = √(2² + 1² + 2²) = 3\n||B|| = √(3² + 1² + 1²) = √11 ≈ 3.32",
+  },
+  {
+    title: "Ähnlichkeit einsetzen",
+    text: "Das Skalarprodukt wird durch beide Längen geteilt. Der Wert liegt nah an 1, also sind die Vektoren ähnlich.",
+    formula: "cos(θ) = 9 / (3 × 3.32)\ncos(θ) ≈ 0.90",
+  },
+];
 
 function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -43,15 +77,26 @@ function getRankedDocs() {
 function fitCanvas() {
   const rect = canvas.getBoundingClientRect();
   const ratio = window.devicePixelRatio || 1;
-  canvas.width = Math.floor(rect.width * ratio);
-  canvas.height = Math.floor(rect.height * ratio);
+  const width = rect.width || Number(canvas.getAttribute("width")) || 760;
+  const height = rect.height || Number(canvas.getAttribute("height")) || 420;
+  const bitmapWidth = Math.floor(width * ratio);
+  const bitmapHeight = Math.floor(height * ratio);
+
+  if (canvas.width !== bitmapWidth || canvas.height !== bitmapHeight || lastCanvasRatio !== ratio) {
+    canvas.width = bitmapWidth;
+    canvas.height = bitmapHeight;
+    lastCanvasWidth = width;
+    lastCanvasHeight = height;
+    lastCanvasRatio = ratio;
+  }
+
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 }
 
 function draw(time = performance.now()) {
   fitCanvas();
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  const width = canvas.clientWidth || lastCanvasWidth || Number(canvas.getAttribute("width")) || 760;
+  const height = canvas.clientHeight || lastCanvasHeight || Number(canvas.getAttribute("height")) || 420;
   const query = queries[querySelect.value];
   const ranked = getRankedDocs();
   const selected = ranked.slice(0, Number(topK.value)).map((doc) => doc.title);
@@ -97,7 +142,7 @@ function draw(time = performance.now()) {
     ctx.fill();
 
     ctx.fillStyle = "#24292f";
-    ctx.font = "600 13px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+    ctx.font = `600 13px ${sansFont}`;
     ctx.fillText(doc.title, x + 12, y + 4);
   });
 
@@ -117,7 +162,7 @@ function draw(time = performance.now()) {
   ctx.arc(query.x * width, query.y * height, 16 + pulse * 8, 0, Math.PI * 2);
   ctx.stroke();
   ctx.fillStyle = "#24292f";
-  ctx.font = "700 14px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+  ctx.font = `600 14px ${sansFont}`;
   ctx.fillText(query.label, query.x * width + 14, query.y * height - 12);
 }
 
@@ -145,16 +190,54 @@ function update() {
   draw();
 }
 
+function renderWalkthroughStep() {
+  const step = walkthroughSteps[currentStep];
+  stepCounter.textContent = `${currentStep + 1} / ${walkthroughSteps.length}`;
+  stepLabel.textContent = `Schritt ${currentStep + 1}`;
+  stepTitle.textContent = step.title;
+  stepText.textContent = step.text;
+  stepFormula.textContent = step.formula;
+}
+
+function changeWalkthroughStep(direction) {
+  currentStep = (currentStep + direction + walkthroughSteps.length) % walkthroughSteps.length;
+  renderWalkthroughStep();
+}
+
 function animate(time) {
   draw(time);
   animationFrameId = requestAnimationFrame(animate);
 }
 
-querySelect.addEventListener("change", update);
-topK.addEventListener("input", update);
-searchButton.addEventListener("click", update);
-window.addEventListener("resize", () => draw());
+function drawAfterLayout() {
+  requestAnimationFrame((time) => {
+    draw(time);
+    requestAnimationFrame(draw);
+  });
+}
 
-update();
-cancelAnimationFrame(animationFrameId);
-animationFrameId = requestAnimationFrame(animate);
+function start() {
+  querySelect.addEventListener("change", update);
+  topK.addEventListener("input", update);
+  prevStep.addEventListener("click", () => changeWalkthroughStep(-1));
+  nextStep.addEventListener("click", () => changeWalkthroughStep(1));
+  window.addEventListener("resize", drawAfterLayout);
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(drawAfterLayout).observe(canvas);
+  }
+
+  renderWalkthroughStep();
+  update();
+  drawAfterLayout();
+  window.addEventListener("load", drawAfterLayout, { once: true });
+
+  cancelAnimationFrame(animationFrameId);
+  animationFrameId = requestAnimationFrame(animate);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", start, { once: true });
+} else {
+  start();
+}
