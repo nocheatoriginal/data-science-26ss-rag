@@ -7,7 +7,7 @@ function distance(a, b) {
 export class VectorDbViewModel {
   constructor() {
     this.queryKey = "rag";
-    this.topK = 3;
+    this.topK = 1;
     this.currentStep = 0;
     this.miniExample = {
       query: [0.82, 0.44, 0.36],
