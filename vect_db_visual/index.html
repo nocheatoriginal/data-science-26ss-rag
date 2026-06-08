@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VectorDB</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Hauptnavigation">
+        <a class="brand" href="#">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16" role="img">
+              <path d="M3 2.75A1.75 1.75 0 1 1 4.75 4.5 1.75 1.75 0 0 1 3 2.75Zm7.25 1.5A1.75 1.75 0 1 1 12 6a1.75 1.75 0 0 1-1.75-1.75ZM2.25 10.5A1.75 1.75 0 1 1 4 12.25 1.75 1.75 0 0 1 2.25 10.5Zm8.5 2.25A1.75 1.75 0 1 1 12.5 14.5a1.75 1.75 0 0 1-1.75-1.75ZM5.8 3.27l4.12 1.06-.25.97-4.12-1.06.25-.97Zm-.92 6.09 5.53-4.17.6.8-5.53 4.17-.6-.8Zm.35 1.46 5.99 1.58-.26.96-5.99-1.58.26-.96Z" />
+            </svg>
+          </span>
+          VectorDB
+        </a>
+        <div class="nav-links" aria-label="Sektionen">
+          <a href="#workflow">Workflow</a>
+          <a href="#playground">Playground</a>
+          <a href="#math">Mathe</a>
+          <a href="#concepts">Konzepte</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">RAG Grundlagen</p>
+          <h1>So findet eine Vector Datenbank semantisch passende Inhalte.</h1>
+          <p>
+            Texte werden in Zahlenvektoren umgewandelt, im mehrdimensionalen Raum abgelegt
+            und per Ähnlichkeitssuche wiedergefunden.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#playground">Demo starten</a>
+            <a class="button secondary" href="#workflow">Ablauf ansehen</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Vektorraum Vorschau">
+          <div class="terminal-bar">
+            <span></span><span></span><span></span>
+            <code>query.js</code>
+          </div>
+          <pre><code>query = embed("Wie funktioniert RAG?")
+topK = db.search(query, k=3)
+
+[
+  { doc: "Embeddings", score: 0.94 },
+  { doc: "Retrieval", score: 0.89 },
+  { doc: "Prompts", score: 0.77 }
+]
+          </code></pre>
+        </div>
+      </section>
+
+      <section class="section" id="workflow">
+        <div class="section-heading">
+          <p class="eyebrow">Pipeline</p>
+          <h2>Vom Dokument zur Antwort</h2>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <span class="step-number">01</span>
+            <h3>Chunking</h3>
+            <p>Dokumente werden in kleinere Abschnitte geteilt, damit Suche und Kontext präzise bleiben.</p>
+          </article>
+          <article class="step">
+            <span class="step-number">02</span>
+            <h3>Embedding</h3>
+            <p>Ein Modell wandelt jeden Abschnitt in einen Vektor um: eine Liste von Zahlen mit Bedeutung.</p>
+          </article>
+          <article class="step">
+            <span class="step-number">03</span>
+            <h3>Index</h3>
+            <p>Die Vector DB speichert Vektoren plus Metadaten und optimiert sie für schnelle Suche.</p>
+          </article>
+          <article class="step">
+            <span class="step-number">04</span>
+            <h3>Retrieval</h3>
+            <p>Eine Frage wird ebenfalls eingebettet. Die nächsten Vektoren liefern relevante Quellen.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section playground-section" id="playground">
+        <div class="section-heading">
+          <p class="eyebrow">Interaktive Demo</p>
+          <h2>Ähnlichkeit im Vektorraum</h2>
+        </div>
+        <div class="playground">
+          <div class="panel controls">
+            <label for="querySelect">Suchanfrage</label>
+            <select id="querySelect">
+              <option value="rag">Wie beantwortet ein Chatbot Fragen mit eigenen Dokumenten?</option>
+              <option value="database">Welche Datenbank speichert Embeddings effizient?</option>
+              <option value="privacy">Wie schützt man sensible Daten in KI-Systemen?</option>
+            </select>
+            <label for="topK">Top-K Treffer: <strong id="topKValue">3</strong></label>
+            <input id="topK" type="range" min="1" max="5" value="3" />
+            <button class="button primary full" id="searchButton">Ähnlichkeit berechnen</button>
+            <p class="control-hint">Der rote Query-Vektor scannt den Raum. Blaue Linien markieren die nächsten Treffer.</p>
+          </div>
+          <div class="panel vector-space">
+            <canvas id="vectorCanvas" width="760" height="420" aria-label="2D Visualisierung von Vektoren"></canvas>
+          </div>
+          <div class="panel results">
+            <h3>Gefundene Dokumente</h3>
+            <div id="resultsList" class="results-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section math-section" id="math">
+        <div class="section-heading">
+          <p class="eyebrow">Mathematische Grundlage</p>
+          <h2>Wie wird Ähnlichkeit berechnet?</h2>
+        </div>
+        <div class="math-grid">
+          <article class="math-card formula-card">
+            <h3>Cosine Similarity</h3>
+            <p>
+              Zwei Texte werden als Vektoren <strong>A</strong> und <strong>B</strong> dargestellt.
+              Der Winkel zwischen ihnen zeigt, wie ähnlich ihre Bedeutung ist.
+            </p>
+            <div class="formula" aria-label="Cosine Similarity Formel">
+              cos(theta) = (A · B) / (||A|| · ||B||)
+            </div>
+            <p>
+              Je näher der Wert an <strong>1</strong> liegt, desto ähnlicher sind die Vektoren.
+              Werte nahe <strong>0</strong> bedeuten: wenig semantische Nähe.
+            </p>
+          </article>
+          <article class="math-card vector-demo">
+            <h3>Mini-Beispiel</h3>
+            <div class="vector-row">
+              <span>Query</span>
+              <code>[0.82, 0.44, 0.36]</code>
+            </div>
+            <div class="vector-row">
+              <span>Dokument</span>
+              <code>[0.76, 0.51, 0.29]</code>
+            </div>
+            <div class="similarity-meter" aria-label="Ähnlichkeit 96 Prozent">
+              <span style="width: 96%"></span>
+            </div>
+            <strong class="meter-label">Similarity: 0.96</strong>
+          </article>
+          <article class="math-card">
+            <h3>Warum Dimensionen?</h3>
+            <p>
+              In echten Embeddings gibt es nicht nur 2 oder 3 Werte, sondern oft hunderte bis
+              tausende Dimensionen. Jede Dimension trägt ein Muster aus dem Training des
+              Embedding-Modells bei.
+            </p>
+            <p>
+              Die Visualisierung reduziert das auf 2D, damit man die Idee sehen kann:
+              nahe Punkte sind Kandidaten für relevante Treffer.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="concepts">
+        <div class="concept-grid">
+          <article>
+            <h2>Warum nicht nur Keywords?</h2>
+            <p>
+              Keyword-Suche findet gleiche Wörter. Vektorsuche findet ähnliche Bedeutung:
+              "Auto" kann dadurch näher bei "Fahrzeug" liegen als bei einem zufälligen Treffer.
+            </p>
+          </article>
+          <article>
+            <h2>Was macht die Datenbank?</h2>
+            <p>
+              Sie speichert Embeddings, IDs und Metadaten. Für große Datenmengen nutzt sie
+              spezielle Indizes, damit die nächsten Nachbarn schnell gefunden werden.
+            </p>
+          </article>
+          <article>
+            <h2>Wo passt RAG rein?</h2>
+            <p>
+              Retrieval Augmented Generation holt relevante Quellen aus der Vector DB und gibt
+              sie einem Sprachmodell als Kontext für fundiertere Antworten.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Data Science SoSe2026</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
